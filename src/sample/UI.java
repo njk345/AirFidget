@@ -12,12 +12,17 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Slider;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 
-public class UI extends Application {
+public class UI extends Application implements Runnable {
     private static double sw, sh; //angular velocity in rps
     public static double angVel;
     public static long duration;
     public static boolean spinning;
+    Thread runner;
+    public void run() {
+
+    }
     @Override
     public void start(Stage primaryStage) throws Exception{
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -35,16 +40,23 @@ public class UI extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+        EventHandler<MouseEvent> spinnerHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
+                System.out.println("Start Spin");
                 spinning = true;
                 duration = 1000*(long)angVel;
                 RotateTransition rt = new RotateTransition(Duration.millis(duration), spinner);
                 rt.setByAngle(angVel * 360 * duration/1000);
                 rt.setCycleCount(1);
+                rt.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent arg0) {
+                        spinning = false;
+                        System.out.println("End Spin");
+                    }
+                });
                 rt.play();
-                spinning = false;
             }
         };
         speedSlider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -54,6 +66,11 @@ public class UI extends Application {
             }
         });
         //Registering the event filter
-        spinner.addEventFilter(MouseEvent.MOUSE_DRAGGED, eventHandler);
+        spinner.addEventFilter(MouseEvent.MOUSE_DRAGGED, spinnerHandler);
+    }
+    public static void main(String[] args) {
+        Thread arduino = new Thread(new Arduino("COM4"), "Arduino");
+        arduino.start();
+        launch(args);
     }
 }

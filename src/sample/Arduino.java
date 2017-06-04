@@ -8,10 +8,15 @@ import org.sintef.jarduino.DigitalPin;
 import org.sintef.jarduino.PinMode;
 import org.sintef.jarduino.DigitalState;
 
-public class Arduino extends JArduino {
+public class Arduino extends JArduino implements Runnable {
+    Thread runner;
     private static DigitalPin motor = DigitalPin.PIN_9;
     public Arduino(String port) {
         super(port);
+        runner = new Thread(this, "Arduino");
+    }
+    public void run() {
+        new Arduino("COM4").runArduinoProcess();
     }
     @Override
     public void setup() {

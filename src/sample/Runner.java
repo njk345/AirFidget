@@ -6,6 +6,6 @@ package sample;
 public class Runner {
     public static void main(String[] args) {
         UI.launch(args);
-        new Arduino("COM4").runArduinoProcess();
+        //new Arduino("COM4").runArduinoProcess();
     }
 }
