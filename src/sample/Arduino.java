@@ -16,16 +16,18 @@ public class Arduino extends JArduino implements Runnable {
         runner = new Thread(this, "Arduino");
     }
     public void run() {
-        new Arduino("COM4").runArduinoProcess();
+        this.runArduinoProcess();
     }
     @Override
-    public void setup() {
+    protected void setup() {
         pinMode(motor, PinMode.OUTPUT);
     }
     @Override
-    public void loop() {
+    protected void loop() {
         if (UI.spinning) {
             digitalWrite(motor, DigitalState.fromValue((byte) (UI.angVel / 10.0 * 127)));
+        } else {
+            digitalWrite(motor, DigitalState.fromValue((byte)0));
         }
     }
 }

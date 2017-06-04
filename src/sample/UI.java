@@ -69,8 +69,8 @@ public class UI extends Application implements Runnable {
         spinner.addEventFilter(MouseEvent.MOUSE_DRAGGED, spinnerHandler);
     }
     public static void main(String[] args) {
-        Thread arduino = new Thread(new Arduino("COM4"), "Arduino");
-        arduino.start();
+        //Thread arduino = new Thread(new Arduino("COM21"), "Arduino");
+        //arduino.start();
         launch(args);
     }
 }
